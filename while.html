@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <body>
+<h1>ESERCITAZIONE HTML WHILE</h1>
+<p id="demo"></p>
+<script>
+let n= prompt("che numero vuoi trasformare da decimale a binario?");
+let str="";
+while(n>0){
+    n=parseInt(n);
+    let r=n%2;
+    str=r+str;
+    n=n/2;
+}
+document.getElementById("demo").innerHTML = "il numero in binario é: " + str;
+
+</script>
+    </body>
+</html>
