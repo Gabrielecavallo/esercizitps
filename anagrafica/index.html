@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>JavaScript Variables</h1>
+<p id="demo"></p>
+<script>
+    let nome = "Simone";
+    let cognome = "Giani";
+    let indirrizzo = "informatico";
+    let citta = "Milano";
+    let CAP = "20006";
+    let anni = prompt("di che anno sei?");
+   
+    let generazione;
+    switch (true) {
+        case (anni>1946 && anni<1964):
+            generazione="baby Boomer";
+            break;
+        case (anni>1965 && anni<1980):
+            generazione="Generazione X";
+            break;
+        case (anni>1981 && anni<1996):
+            generazione="Millenials";
+            break;
+        case (anni>1997 && anni<2012):
+            generazione="Generazione Z";
+            break;
+        case (anni>2013):
+            generazione="Generazione Alpha";
+            break;
+        case (anni>1928 && anni<1945):
+            generazione="Generazione Silenziosa";
+            break;
+        case (anni>1901 && anni<1927):
+            generazione="Greatest Generation";
+            break;
+        default:
+            generazione="morto"
+
+
+    }
+
+
+    document.getElementById("demo").innerHTML = "se sei nato nel: "+anni+"sei della generazione: ";
+    document.getElementById("demo").innerHTML = generazione;
+    </script>
+   
+    </body>
+    </html>
+
 
