@@ -1,42 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <title>Form Dinamico</title>
+    <meta charset="UTF-8">
+    <title>Form Dinamico Moderno</title>
+
     <style>
         body {
+            margin: 0;
+            padding: 40px;
             display: flex;
-            padding: 20px;
-            font-family: Arial, sans-serif;
+            justify-content: center;
+            align-items: flex-start;
+            background: #0d0d0d;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #e0e0e0;
+        }
+
+        .form-box {
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 20px;
+            width: 330px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .form-box p {
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 12px;
+            border: none;
+            background: #000;
+            color: #0f0;
+            font-size: 1rem;
+        }
+
+        label {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        input[type="radio"], input[type="checkbox"] {
+            transform: scale(1.2);
+            margin-top: 8px;
+        }
+        
+        select {
+            width: 98%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 12px;
+            border: none;
+            background: #000;
+            color: #0f0;
+        }
+
+        
+        #bottone {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            background: #00c853;
+            color: white;
+            transition: .15s;
+        }
+
+        #bottone:hover {
+            background: #00a844;
         }
 
         .output {
+            background: #1a1a1a;
+            padding: 25px;
             margin-left: 30px;
+            border-radius: 20px;
+            width: 300px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
         }
 
-        #bottone {
-            margin-top: 10px;
+        .output p {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
 
-    <div>
-        <p>Nome: <input type="text" id="inputnome"></p>
-        <p>Cognome: <input type="text" id="inputcognome"></p>
+    <div class="form-box">
+
+        <p>Nome:</p>
+        <input type="text" id="inputnome">
+
+        <p>Cognome:</p>
+        <input type="text" id="inputcognome">
+
         <p>Genere:</p>
-        
         <input type="radio" id="Maschio" name="inputgenere" value="Maschio">
         <label for="Maschio">Maschio</label><br>
+
         <input type="radio" id="Femmina" name="inputgenere" value="Femmina">
         <label for="Femmina">Femmina</label><br>
+
         <input type="radio" id="Altro" name="inputgenere" value="Altro">
         <label for="Altro">Altro</label><br><br>
 
         <p>Veicoli posseduti:</p>
         <input type="checkbox" id="Auto" value="Auto">
         <label for="Auto">Auto</label><br>
+
         <input type="checkbox" id="Moto" value="Moto">
         <label for="Moto">Moto</label><br>
+
         <input type="checkbox" id="Bicicletta" value="Bicicletta">
         <label for="Bicicletta">Bicicletta</label><br><br>
 
@@ -51,19 +134,27 @@
         </select><br><br>
 
         <p>Sport praticati:</p>
+
         <input type="checkbox" id="Calcio" value="Calcio">
         <label for="Calcio">Calcio</label><br>
+
         <input type="checkbox" id="Basket" value="Basket">
         <label for="Basket">Basket</label><br>
+
         <input type="checkbox" id="Pallavolo" value="Pallavolo">
         <label for="Pallavolo">Pallavolo</label><br>
+
         <input type="checkbox" id="Tennis" value="Tennis">
         <label for="Tennis">Tennis</label><br>
+
         <input type="checkbox" id="Biliardo" value="Biliardo">
         <label for="Biliardo">Biliardo</label><br><br>
 
-        <p>Indirizzo: <input type="text" id="inputindirizzo"></p>
+        <p>Indirizzo:</p>
+        <input type="text" id="inputindirizzo">
+
         <input id="bottone" type="button" value="Mostra Dati" onclick="stampa()">
+
     </div>
 
     <div class="output">
@@ -78,34 +169,53 @@
 
     <script>
         function stampa() {
-            document.getElementById("nome").innerText = document.getElementById("inputnome").value;
-            document.getElementById("cognome").innerText = document.getElementById("inputcognome").value;
 
-            let genere = "";
-            if (document.getElementById("Maschio").checked) genere = "Maschio";
-            else if (document.getElementById("Femmina").checked) genere = "Femmina";
-            else if (document.getElementById("Altro").checked) genere = "Altro";
-            else genere = "Non specificato";
-            document.getElementById("genere").innerText = genere;
+            document.getElementById("nome").innerText =
+                document.getElementById("inputnome").value;
 
-            let veicoli = [];
-            if (document.getElementById("Auto").checked) veicoli.push("Auto");
-            if (document.getElementById("Moto").checked) veicoli.push("Moto");
-            if (document.getElementById("Bicicletta").checked) veicoli.push("Bicicletta");
-            document.getElementById("veicoli").innerText = veicoli.length > 0 ? veicoli.join(", ") : "Nessuno";
+            document.getElementById("cognome").innerText =
+                document.getElementById("inputcognome").value;
 
-            let provincia = document.getElementById("provincia").value;
-            document.getElementById("provinciaout").innerText = provincia ? provincia : "Non selezionata";
+            const generi = ["Maschio", "Femmina", "Altro"];
+            let genereOut = "Non specificato";
 
-            let sport = [];
-            if (document.getElementById("Calcio").checked) sport.push("Calcio");
-            if (document.getElementById("Basket").checked) sport.push("Basket");
-            if (document.getElementById("Pallavolo").checked) sport.push("Pallavolo");
-            if (document.getElementById("Tennis").checked) sport.push("Tennis");
-            if (document.getElementById("Biliardo").checked) sport.push("Biliardo");
-            document.getElementById("sport").innerText = sport.length > 0 ? sport.join(", ") : "Nessuno";
+            for (let g of generi) {
+                if (document.getElementById(g).checked) {
+                    genereOut = g;
+                }
+            }
+            document.getElementById("genere").innerText = genereOut;
 
-            document.getElementById("indirizzo").innerText = document.getElementById("inputindirizzo").value;
+            const listaVeicoli = ["Auto", "Moto", "Bicicletta"];
+            let veicoliOut = [];
+
+            for (let v of listaVeicoli) {
+                if (document.getElementById(v).checked) {
+                    veicoliOut.push(v);
+                }
+            }
+
+            document.getElementById("veicoli").innerText =
+                veicoliOut.length ? veicoliOut.join(", ") : "Nessuno";
+
+            const provincia = document.getElementById("provincia").value;
+            document.getElementById("provinciaout").innerText =
+                provincia ? provincia : "Non selezionata";
+
+            const listaSport = ["Calcio", "Basket", "Pallavolo", "Tennis", "Biliardo"];
+            let sportOut = [];
+
+            for (let s of listaSport) {
+                if (document.getElementById(s).checked) {
+                    sportOut.push(s);
+                }
+            }
+
+            document.getElementById("sport").innerText =
+                sportOut.length ? sportOut.join(", ") : "Nessuno";
+
+            document.getElementById("indirizzo").innerText =
+                document.getElementById("inputindirizzo").value;
         }
     </script>
 
