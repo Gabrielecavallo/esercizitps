@@ -118,8 +118,6 @@ button:hover {
 
 <script>
 let display = document.getElementById("display");
-
-// vettore per numeri e operatori
 let elementi = [];
 let memoria = 0;
 
@@ -136,16 +134,20 @@ function setOperator(op) {
 function calcola() {
     elementi.push(parseFloat(display.value));
 
-    let risultato = elementi[0];
-
     for (let i = 1; i < elementi.length; i += 2) {
-        let op = elementi[i];
-        let n = elementi[i + 1];
+        if (elementi[i] === "*" || elementi[i] === "/") {
+            let a = elementi[i - 1];
+            let b = elementi[i + 1];
+            let risultato = elementi[i] === "*" ? a * b : a / b;
+            elementi.splice(i - 1, 3, risultato);
+            i -= 2;
+        }
+    }
 
-        if (op === "+") risultato += n;
-        if (op === "-") risultato -= n;
-        if (op === "*") risultato *= n;
-        if (op === "/") risultato /= n;
+    let risultato = elementi[0];
+    for (let i = 1; i < elementi.length; i += 2) {
+        if (elementi[i] === "+") risultato += elementi[i + 1];
+        if (elementi[i] === "-") risultato -= elementi[i + 1];
     }
 
     display.value = risultato;
@@ -161,7 +163,6 @@ function backspace() {
     display.value = display.value.slice(0, -1);
 }
 
-// FUNZIONI MATEMATICHE
 function potenza() {
     let n = parseFloat(display.value);
     display.value = Math.pow(n, 2);
@@ -189,7 +190,6 @@ function tangente() {
     display.value = Math.tan(parseFloat(display.value));
 }
 
-// MEMORIA
 function memoryAdd() {
     memoria += parseFloat(display.value);
 }
