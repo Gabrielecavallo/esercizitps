@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Inserimento Persone</title>
+
+<style>
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+    }
+
+    .container {
+        width: 400px;
+        margin: 40px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2, h3 {
+        text-align: center;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #007BFF;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th {
+        background-color: #007BFF;
+        color: white;
+        padding: 8px;
+    }
+
+    td {
+        padding: 8px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Inserisci dati</h2>
+
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="cognome" placeholder="Cognome">
+    <input type="text" id="eta" placeholder="Età">
+    <input type="text" id="citta" placeholder="Città">
+
+    <button onclick="aggiungi()">Aggiungi</button>
+
+    <h3>Elenco persone</h3>
+
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Età</th>
+            <th>Città</th>
+        </tr>
+        <tbody id="tabella"></tbody>
+    </table>
+
+</div>
+
+<script>
+    var persone = [];
+
+    function aggiungi() {
+        var persona = {
+            nome: document.getElementById("nome").value,
+            cognome: document.getElementById("cognome").value,
+            eta: document.getElementById("eta").value,
+            citta: document.getElementById("citta").value
+        };
+
+        persone.push(persona);
+        stampa();
+    }
+
+    function stampa() {
+        var testo = "";
+
+        for (var i = 0; i < persone.length; i++) {
+            testo += "<tr>";
+            testo += "<td>" + persone[i].nome + "</td>";
+            testo += "<td>" + persone[i].cognome + "</td>";
+            testo += "<td>" + persone[i].eta + "</td>";
+            testo += "<td>" + persone[i].citta + "</td>";
+            testo += "</tr>";
+        }
+
+        document.getElementById("tabella").innerHTML = testo;
+    }
+</script>
+
+</body>
+</html>
