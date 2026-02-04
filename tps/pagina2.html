@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Dati ricevuti:</h2>
+
+<div id="risultato"></div>
+
+<script>
+// 1. Prendiamo la parte dell'URL che inizia con "?"
+// Esempio: "?utente=Mario&citta=Roma"
+var stringa = window.location.search;
+
+// 2. Togliamo il primo carattere (il "?") usando substring
+// Risultato: "utente=Mario&citta=Roma"
+var query = stringa.substring(1);
+
+// 3. Dividiamo la stringa in un array ogni volta che c'è "&"
+// Risultato: ["utente=Mario", "citta=Roma"]
+var coppie = query.split("&");
+
+var testoFinale = "";
+
+// 4. Ciclo for classico (come su W3Schools) per girare l'array
+for (var i = 0; i < coppie.length; i++) {
+    
+    // Dividiamo ogni elemento al simbolo "="
+    // Esempio: "utente=Mario" diventa ["utente", "Mario"]
+    var dati = coppie[i].split("=");
+    
+    var nomeParametro = dati[0];
+    var valoreParametro = dati[1];
+
+    // Aggiungiamo il testo alla variabile finale
+    testoFinale = testoFinale + nomeParametro + ": " + valoreParametro + "<br>";
+}
+
+// 5. Stampiamo tutto nel div
+document.getElementById("risultato").innerHTML = testoFinale;
+</script>
+
+</body>
+</html>
