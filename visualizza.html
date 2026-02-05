@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visualizza Dati</title>
+</head>
+<body>
+
+    <h2>Tabella Riassuntiva</h2>
+    
+    <table border="1" style="width:100%">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Età</th>
+                <th>Città</th>
+            </tr>
+        </thead>
+        <tbody id="risultato"></tbody>
+    </table>
+
+    <br>
+    <button onclick="window.location.href='index.html'">Torna a Inserimento</button>
+    <button onclick="cancellaTutto()">Svuota Elenco</button>
+
+    <script>
+        function carica() {
+            var dati = localStorage.getItem("elenco");
+            var tabella = document.getElementById("risultato");
+            
+            if (dati != null) {
+                var elenco = JSON.parse(dati);
+                for (var i = 0; i < elenco.length; i++) {
+                    var riga = "<tr><td>" + elenco[i].nome + "</td><td>" + elenco[i].cognome + "</td><td>" + elenco[i].eta + "</td><td>" + elenco[i].citta + "</td></tr>";
+                    tabella.innerHTML += riga;
+                }
+            }
+        }
+
+        function cancellaTutto() {
+            localStorage.removeItem("elenco");
+            location.reload();
+        }
+
+        window.onload = carica;
+    </script>
+
+</body>
+</html>
