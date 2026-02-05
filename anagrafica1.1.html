@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Anagrafica1.1</title>
+</head>
+<body>
+  <h1>ANAGRAFICA</h1>
+
+  <label>Nome:</label>
+  <input type="text" id="nome" value="Gabriele"><br><br>
+
+  <label>Cognome:</label>
+  <input type="text" id="cognome" value="Cavallo"><br><br>
+
+  <label>Indirizzo:</label>
+  <input type="text" id="indirizzo" value="Informatico"><br><br>
+
+  <label>Città:</label>
+  <input type="text" id="citta" value="Milano"><br><br>
+
+  <label>CAP:</label>
+  <input type="text" id="cap" value="20006"><br><br>
+
+  <label>Anno di nascita:</label>
+  <input type="number" id="anno" value="2007"><br><br>
+
+  <button onclick="calcolaGenerazione()">Scopri la generazione</button>
+
+  <p id="demo"></p>
+
+  <script>
+    function calcolaGenerazione() {
+      let nome = document.getElementById("nome").value;
+      let cognome = document.getElementById("cognome").value;
+      let indirizzo = document.getElementById("indirizzo").value;
+      let citta = document.getElementById("citta").value;
+      let CAP = document.getElementById("cap").value;
+      let anni = parseInt(document.getElementById("anno").value);
+
+      let generazione;
+
+      switch (true) {
+        case (anni >= 1946 && anni <= 1964):
+          generazione = "Baby Boomer";
+          break;
+        case (anni >= 1965 && anni <= 1980):
+          generazione = "Generazione X";
+          break;
+        case (anni >= 1981 && anni <= 1996):
+          generazione = "Millennials";
+          break;
+        case (anni >= 1997 && anni <= 2012):
+          generazione = "Generazione Z";
+          break;
+        case (anni >= 2013):
+          generazione = "Generazione Alpha";
+          break;
+        case (anni >= 1928 && anni <= 1945):
+          generazione = "Generazione Silenziosa";
+          break;
+        case (anni >= 1901 && anni <= 1927):
+          generazione = "Greatest Generation";
+          break;
+        default:
+          generazione = "Non classificabile";
+      }
+
+      document.getElementById("demo").innerHTML =
+        `${nome} ${cognome}, di ${citta} (${CAP}), indirizzo: ${indirizzo}, nato nel ${anni}, appartiene alla <b>${generazione}</b>.`;
+    }
+  </script>
+</body>
+</html>
