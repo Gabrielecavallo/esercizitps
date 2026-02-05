@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inserimento Dati</title>
+</head>
+<body>
+
+    <h2>Nuovo Utente</h2>
+    Nome: <input type="text" id="nome"><br>
+    Cognome: <input type="text" id="cognome"><br>
+    Età: <input type="text" id="eta"><br>
+    Città: <input type="text" id="citta"><br><br>
+    
+    <button onclick="aggiungi()">Aggiungi e Salva</button>
+    <button onclick="window.location.href='visualizza.html'">Vai a Tabella</button>
+
+    <table border="1" id="tabella" style="margin-top:20px; width:100%">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Età</th>
+                <th>Città</th>
+            </tr>
+        </thead>
+        <tbody id="corpoTabella"></tbody>
+    </table>
+
+    <script>
+        function aggiungi() {
+            var n = document.getElementById("nome").value;
+            var c = document.getElementById("cognome").value;
+            var e = document.getElementById("eta").value;
+            var t = document.getElementById("citta").value;
+
+            var persona = {
+                nome: n,
+                cognome: c,
+                eta: e,
+                citta: t
+            };
+
+            var elenco = JSON.parse(localStorage.getItem("elenco"));
+            if (elenco == null) {
+                elenco = [];
+            }
+
+            elenco.push(persona);
+            localStorage.setItem("elenco", JSON.stringify(elenco));
+
+            document.getElementById("nome").value = "";
+            document.getElementById("cognome").value = "";
+            document.getElementById("eta").value = "";
+            document.getElementById("citta").value = "";
+
+            mostraTabella();
+        }
+
+        function mostraTabella() {
+            var elenco = JSON.parse(localStorage.getItem("elenco"));
+            var corpo = document.getElementById("corpoTabella");
+            corpo.innerHTML = "";
+
+            if (elenco != null) {
+                for (var i = 0; i < elenco.length; i++) {
+                    var riga = "<tr><td>" + elenco[i].nome + "</td><td>" + elenco[i].cognome + "</td><td>" + elenco[i].eta + "</td><td>" + elenco[i].citta + "</td></tr>";
+                    corpo.innerHTML += riga;
+                }
+            }
+        }
+
+        window.onload = mostraTabella;
+    </script>
+
+</body>
+</html>
