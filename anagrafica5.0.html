@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anagrafica RegEx</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { background: white; max-width: 500px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input { width: 100%; padding: 8px; margin: 10px 0; box-sizing: border-box; }
+        button { padding: 10px; cursor: pointer; border-radius: 4px; border: none; }
+        .btn-ok { background-color: green; color: white; }
+        .btn-go { background-color: blue; color: white; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Dati Utente</h2>
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="cognome" placeholder="Cognome">
+    <input type="text" id="eta" placeholder="Età">
+    <input type="text" id="citta" placeholder="Città">
+    <input type="text" id="cap" placeholder="CAP">
+    <input type="text" id="email" placeholder="Email">
+
+    <button class="btn-ok" onclick="aggiungi()">Salva</button>
+    <button class="btn-go" onclick="window.location.href='visualizza.html'">Vai a Tabella</button>
+
+    <table id="tabella">
+        <thead>
+            <tr><th>Nome</th><th>CAP</th><th>Email</th></tr>
+        </thead>
+        <tbody id="corpoTabella"></tbody>
+    </table>
+</div>
+
+<script>
+    function aggiungi() {
+        var n = document.getElementById("nome").value;
+        var c = document.getElementById("cognome").value;
+        var e = document.getElementById("eta").value;
+        var t = document.getElementById("citta").value;
+        var cp = document.getElementById("cap").value;
+        var em = document.getElementById("email").value;
+
+        var regLettere = /^[A-Za-z\s]+$/;
+        var regNumeri = /^[0-9]+$/;
+        var regEmail = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,6}$/;
+
+        if (!regLettere.test(n) || !regLettere.test(c)) {
+            alert("Nome e Cognome devono contenere solo lettere");
+            return;
+        }
+        if (!regNumeri.test(cp)) {
+            alert("CAP non valido");
+            return;
+        }
+        if (!regEmail.test(em)) {
+            alert("Email non corretta");
+            return;
+        }
+
+        var persona = { nome: n, cognome: c, eta: e, citta: t, cap: cp, email: em };
+        var elenco = JSON.parse(localStorage.getItem("elenco")) || [];
+        elenco.push(persona);
+        localStorage.setItem("elenco", JSON.stringify(elenco));
+
+        mostraTabella();
+    }
+
+    function mostraTabella() {
+        var elenco = JSON.parse(localStorage.getItem("elenco"));
+        var corpo = document.getElementById("corpoTabella");
+        corpo.innerHTML = "";
+        if (elenco) {
+            elenco.forEach(p => {
+                corpo.innerHTML += "<tr><td>"+p.nome+"</td><td>"+p.cap+"</td><td>"+p.email+"</td></tr>";
+            });
+        }
+    }
+    window.onload = mostraTabella;
+</script>
+
+</body>
+</html>
