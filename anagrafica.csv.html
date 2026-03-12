@@ -1,133 +1,112 @@
+
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
+
 <meta charset="UTF-8">
-<title>Anagrafica CSV</title>
+<title>Importa CSV</title>
 
 <style>
 
 body{
     font-family: Arial, Helvetica, sans-serif;
-    background-color:#f4f6f8;
+    background:#f4f6f8;
     margin:0;
     padding:20px;
     text-align:center;
 }
 
-h1{
+h2{
     margin-bottom:20px;
 }
 
-#fileInput{
-    margin-bottom:30px;
+input[type="file"]{
+    margin-bottom:25px;
 }
 
-#contenitore{
+.container{
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
     gap:20px;
 }
 
-.card{
+.persona{
     background:white;
-    width:250px;
     padding:15px;
+    width:220px;
     border-radius:10px;
     box-shadow:0 3px 8px rgba(0,0,0,0.15);
     text-align:left;
 }
 
-.card h3{
-    margin-top:0;
-    color:#333;
-}
-
-.card p{
-    margin:5px 0;
-    color:#555;
-}
-
 </style>
-</head>
 
-<body>
-
-<h1>Anagrafica da file CSV</h1>
-
-<input type="file" id="fileInput" accept=".csv">
-
-<div id="contenitore"></div>
 
 <script>
 
-const inputFile = document.getElementById("fileInput");
+function caricaFile(event){
 
-inputFile.addEventListener("change", leggiFile);
+  var file = event.target.files[0];
 
-function leggiFile(event){
+  var reader = new FileReader();
 
-    const file = event.target.files[0];
+  reader.onload = function(e){
 
-    const reader = new FileReader();
+    var testo = e.target.result;
 
-    reader.onload = function(e){
+    var righe = testo.split("\n");
 
-        const contenuto = e.target.result;
+    mostraPersone(righe, 1);
 
-        const righe = contenuto.split("\n");
+  };
 
-        const dati = [];
-
-        for(let i = 1; i < righe.length; i++){
-
-            const colonne = righe[i].split(",");
-
-            if(colonne.length >= 4){
-
-                dati.push({
-                    nome: colonne[0],
-                    cognome: colonne[1],
-                    email: colonne[2],
-                    telefono: colonne[3]
-                });
-
-            }
-
-        }
-
-        creaBlocchi(dati,0);
-
-    };
-
-    reader.readAsText(file);
-
+  reader.readAsText(file);
 }
 
-function creaBlocchi(lista, indice){
 
-    if(indice >= lista.length){
-        return;
-    }
+function mostraPersone(righe, i){
 
-    const persona = lista[indice];
+  if(i >= righe.length){
+    return;
+  }
 
-    const card = document.createElement("div");
-    card.className = "card";
+  var dati = righe[i].split(",");
 
-    card.innerHTML = `
-        <h3>${persona.nome} ${persona.cognome}</h3>
-        <p>Email: ${persona.email}</p>
-        <p>Telefono: ${persona.telefono}</p>
-    `;
+  var nome = dati[0];
+  var cognome = dati[1];
+  var eta = dati[2];
+  var citta = dati[3];
 
-    document.getElementById("contenitore").appendChild(card);
+  var blocco = document.createElement("div");
 
-    creaBlocchi(lista, indice + 1);
+  blocco.className = "persona";
+
+  blocco.innerHTML =
+    "<b>Nome:</b> " + nome + "<br>" +
+    "<b>Cognome:</b> " + cognome + "<br>" +
+    "<b>Età:</b> " + eta + "<br>" +
+    "<b>Città:</b> " + citta;
+
+  document.getElementById("output").appendChild(blocco);
+
+  mostraPersone(righe, i + 1);
 
 }
 
 </script>
 
+</head>
+
+<body>
+
+<h2>Importa file CSV</h2>
+
+<input type="file" onchange="caricaFile(event)">
+
+<div class="container" id="output"></div>
+
 </body>
+
 </html>
