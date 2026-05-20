@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrello</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header></header>
+
+    <div class="container">
+        <h1 style="margin-bottom: 10px;">CARRELLO</h1>
+        <p style="color: #999999; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px;">Il tuo ordine</p>
+
+        <div id="cartEmpty" style="display: none; text-align: center; padding: 60px 20px;">
+            <h2 style="margin-bottom: 20px;">Carrello vuoto</h2>
+            <p style="color: #999999; margin-bottom: 30px;">Inizia a fare shopping</p>
+            <a href="index.html" class="btn">TORNA AL CATALOGO</a>
+        </div>
+
+        <div id="cartContent" style="display: none;">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Prodotto</th>
+                        <th style="text-align: center;">Quantità</th>
+                        <th style="text-align: right;">Prezzo Unitario</th>
+                        <th style="text-align: right;">Subtotale</th>
+                        <th style="text-align: center;">Azione</th>
+                    </tr>
+                </thead>
+                <tbody id="cartItems"></tbody>
+            </table>
+
+            <div style="display: flex; gap: 20px; justify-content: space-between; align-items: flex-start; margin-top: 30px;">
+                <div style="flex: 1;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 16px;">APPLICA COUPON</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <input 
+                            type="text" 
+                            id="couponInput" 
+                            placeholder="es: SCONTO20" 
+                            style="flex-grow: 1; margin-bottom: 0;"
+                        >
+                        <button class="btn" onclick="applyCoupon()" style="margin-bottom: 0;">OK</button>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #666666; margin-top: 8px;">
+                        Sconto fisso: 10%<br>
+                        Codice: SCONTO<br>
+                        Spesa minima: 30€
+                    </p>
+                    <div id="couponMessage" style="margin-top: 12px;"></div>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotale:</span>
+                        <span id="subtotal">€ 0,00</span>
+                    </div>
+                    <div class="summary-row" id="discountRow" style="display: none;">
+                        <span>Sconto:</span>
+                        <span id="discount" style="color: #66ff66;">- € 0,00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Totale:</span>
+                        <span id="total">€ 0,00</span>
+                    </div>
+                    <button class="btn block" onclick="goToCheckout()" id="checkoutBtn">PROCEDI AL CHECKOUT</button>
+                    <button class="btn secondary block" onclick="clearCart()">SVUOTA CARRELLO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        let appliedDiscount = 0;
+        let discountPercentage = 0;
+
+        function renderCart() {
+            const isEmpty = shop.cart.length === 0;
+            document.getElementById('cartEmpty').style.display = isEmpty ? 'block' : 'none';
+            document.getElementById('cartContent').style.display = isEmpty ? 'none' : 'block';
+
+            if (!isEmpty) {
+                const tbody = document.getElementById('cartItems');
+                tbody.innerHTML = shop.cart.map((item, idx) => `
+                    <tr>
+                        <td>
+                            <div class="cart-item-name">${item.nomeProdotto}</div>
+                            <div class="cart-item-brand">${item.brand}</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <div class="quantity-input" style="width: fit-content; margin: 0 auto;">
+                                <button class="quantity-btn" onclick="updateItemQuantity(${idx}, ${Math.max(1, item.quantity - 1)})">−</button>
+                                <input type="number" class="quantity-value" value="${item.quantity}" onchange="updateItemQuantity(${idx}, this.value)" min="1" readonly>
+                                <button class="quantity-btn" onclick="updateItemQuantity(${idx}, ${item.quantity + 1})">+</button>
+                            </div>
+                        </td>
+                        <td style="text-align: right;">${formatPrice(item.prezzo)}</td>
+                        <td style="text-align: right; font-weight: 700;">${formatPrice(item.prezzo * item.quantity)}</td>
+                        <td style="text-align: center;">
+                            <button class="remove-btn" onclick="removeItem(${idx})">RIMUOVI</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                updateSummary();
+            }
+        }
+
+        function updateItemQuantity(cartIdx, newQty) {
+            shop.updateQuantity(cartIdx, Math.max(1, parseInt(newQty)));
+            renderCart();
+        }
+
+        function removeItem(cartIdx) {
+            shop.removeFromCart(cartIdx);
+            renderCart();
+        }
+
+        function updateSummary() {
+            const subtotal = shop.getCartTotal();
+            let finalTotal = subtotal - appliedDiscount;
+
+            document.getElementById('subtotal').textContent = formatPrice(subtotal);
+            
+            if (appliedDiscount > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('discount').textContent = `- ${formatPrice(appliedDiscount)}`;
+            } else {
+                document.getElementById('discountRow').style.display = 'none';
+            }
+
+            document.getElementById('total').textContent = formatPrice(finalTotal);
+        }
+
+        function applyCoupon() {
+            const couponCode = document.getElementById('couponInput').value;
+            const msgDiv = document.getElementById('couponMessage');
+
+            if (!couponCode) {
+                msgDiv.innerHTML = '<div class="alert alert-error">Inserisci un codice</div>';
+                return;
+            }
+
+            const result = shop.applyCoupon(couponCode);
+
+            if (result.valid) {
+                appliedDiscount = result.discount;
+                discountPercentage = result.percentage;
+                msgDiv.innerHTML = `<div class="alert alert-success">✓ Sconto ${result.percentage}% applicato!</div>`;
+                document.getElementById('couponInput').disabled = true;
+            } else {
+                appliedDiscount = 0;
+                discountPercentage = 0;
+                msgDiv.innerHTML = `<div class="alert alert-error">✗ ${result.message}</div>`;
+            }
+
+            updateSummary();
+        }
+
+        function clearCart() {
+            if (confirm('Sei sicuro di voler svuotare il carrello?')) {
+                shop.cart = [];
+                shop.saveCart();
+                appliedDiscount = 0;
+                document.getElementById('couponInput').value = '';
+                document.getElementById('couponInput').disabled = false;
+                document.getElementById('couponMessage').innerHTML = '';
+                renderCart();
+            }
+        }
+
+        function goToCheckout() {
+            if (shop.cart.length === 0) {
+                alert('Il carrello è vuoto');
+                return;
+            }
+
+            // Salva il coupon applicato
+            localStorage.setItem('appliedDiscount', appliedDiscount);
+            localStorage.setItem('discountPercentage', discountPercentage);
+            window.location.href = 'checkout.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                renderCart();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header></header>
+
+    <div class="checkout-container">
+        <h1 style="margin-bottom: 30px;">CHECKOUT</h1>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <!-- FORM DATI CLIENTE -->
+            <div>
+                <form id="checkoutForm">
+                    <div class="checkout-section">
+                        <h2>DATI CLIENTE</h2>
+                        
+                        <label for="fullName">Nome Completo *</label>
+                        <input type="text" id="fullName" required>
+
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" required>
+
+                        <label for="phone">Telefono *</label>
+                        <input type="tel" id="phone" required>
+
+                        <label for="address">Indirizzo *</label>
+                        <input type="text" id="address" placeholder="Via, numero civico" required>
+
+                        <label for="city">Città *</label>
+                        <input type="text" id="city" required>
+                    </div>
+
+                    <div class="checkout-section">
+                        <h2>RIEPILOGO ORDINE</h2>
+                        <div id="orderSummary"></div>
+                    </div>
+
+                    <button type="submit" class="btn block" style="margin-bottom: 16px;" id="submitBtn">
+                        GENERA PDF E COMPLETA ORDINE
+                    </button>
+
+                    <a href="cart.html" class="btn secondary block">
+                        ← TORNA AL CARRELLO
+                    </a>
+                </form>
+            </div>
+
+            <!-- RIEPILOGO VISIVO -->
+            <div>
+                <div class="checkout-section" style="position: sticky; top: 100px;">
+                    <h2>TOTALE ORDINE</h2>
+                    <div id="finalSummary"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function renderCheckout() {
+            if (shop.cart.length === 0) {
+                window.location.href = 'cart.html';
+                return;
+            }
+
+            const appliedDiscount = parseFloat(localStorage.getItem('appliedDiscount') || 0);
+            const total = shop.getCartTotal();
+            const finalTotal = total - appliedDiscount;
+
+            // Riepilogo nel form
+            const summaryHTML = `
+                <table class="cart-table" style="margin-bottom: 0;">
+                    <tbody>
+                        ${shop.cart.map(item => `
+                            <tr>
+                                <td>
+                                    <div class="cart-item-name">${item.nomeProdotto}</div>
+                                    <div class="cart-item-brand">${item.brand}</div>
+                                </td>
+                                <td style="text-align: right;">
+                                    ${item.quantity}x ${formatPrice(item.prezzo)}<br>
+                                    <strong>${formatPrice(item.prezzo * item.quantity)}</strong>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('orderSummary').innerHTML = summaryHTML;
+
+            // Totale laterale
+            const finalSummaryHTML = `
+                <div class="summary-row">
+                    <span>Subtotale:</span>
+                    <span>${formatPrice(total)}</span>
+                </div>
+                ${appliedDiscount > 0 ? `
+                    <div class="summary-row">
+                        <span>Sconto 10%:</span>
+                        <span style="color: #66ff66;">- ${formatPrice(appliedDiscount)}</span>
+                    </div>
+                ` : ''}
+                <div class="summary-row total">
+                    <span>Totale:</span>
+                    <span>${formatPrice(finalTotal)}</span>
+                </div>
+            `;
+
+            document.getElementById('finalSummary').innerHTML = finalSummaryHTML;
+        }
+
+        function generatePDF(customerInfo) {
+            const appliedDiscount = parseFloat(localStorage.getItem('appliedDiscount') || 0);
+            const total = shop.getCartTotal();
+            const finalTotal = total - appliedDiscount;
+            const orderNumber = shop.generateOrderNumber();
+            const now = new Date();
+
+            let htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body style="font-family: Arial, sans-serif; background: white; color: #000; margin: 0; padding: 0;">
+    <div style="max-width: 800px; margin: 0 auto; padding: 40px; background: white;">
+        <div style="border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 30px;">
+            <div style="font-size: 28px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px;">${shop.shopName}</div>
+            <div style="font-size: 12px; color: #666; text-transform: uppercase;">Ordine #${orderNumber}</div>
+            <div style="font-size: 12px; color: #666; text-transform: uppercase;">Data: ${now.toLocaleDateString('it-IT')} ${now.toLocaleTimeString('it-IT', {hour: '2-digit', minute: '2-digit'})}</div>
+        </div>
+
+        <div style="font-size: 14px; font-weight: bold; text-transform: uppercase; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 8px;">Dati Cliente</div>
+        <div style="font-size: 12px; line-height: 1.8;">
+            <p style="margin-bottom: 5px;"><strong style="display: inline-block; width: 100px;">Nome:</strong> ${customerInfo.fullName}</p>
+            <p style="margin-bottom: 5px;"><strong style="display: inline-block; width: 100px;">Email:</strong> ${customerInfo.email}</p>
+            <p style="margin-bottom: 5px;"><strong style="display: inline-block; width: 100px;">Telefono:</strong> ${customerInfo.phone}</p>
+            <p style="margin-bottom: 5px;"><strong style="display: inline-block; width: 100px;">Indirizzo:</strong> ${customerInfo.address}</p>
+            <p style="margin-bottom: 5px;"><strong style="display: inline-block; width: 100px;">Città:</strong> ${customerInfo.city}</p>
+        </div>
+
+        <div style="font-size: 14px; font-weight: bold; text-transform: uppercase; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 8px;">Dettagli Ordine</div>
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 12px;">
+            <thead>
+                <tr>
+                    <th style="background: #f0f0f0; padding: 8px; text-align: left; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid #000;">Prodotto</th>
+                    <th style="background: #f0f0f0; padding: 8px; text-align: right; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid #000;">Quantità</th>
+                    <th style="background: #f0f0f0; padding: 8px; text-align: right; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid #000;">Prezzo Unit.</th>
+                    <th style="background: #f0f0f0; padding: 8px; text-align: right; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid #000;">Subtotale</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${shop.cart.map(item => `
+                    <tr>
+                        <td style="padding: 10px 8px; border-bottom: 1px solid #ddd;">
+                            <strong>${item.nomeProdotto}</strong><br>
+                            <span style="color: #999; font-size: 10px;">${item.brand}</span>
+                        </td>
+                        <td style="padding: 10px 8px; border-bottom: 1px solid #ddd; text-align: right;">${item.quantity}</td>
+                        <td style="padding: 10px 8px; border-bottom: 1px solid #ddd; text-align: right;">€ ${item.prezzo.toFixed(2)}</td>
+                        <td style="padding: 10px 8px; border-bottom: 1px solid #ddd; text-align: right;">€ ${(item.prezzo * item.quantity).toFixed(2)}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <div style="width: 300px; margin-left: auto; margin-top: 30px;">
+            <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 12px;">
+                <span>Subtotale:</span>
+                <span>€ ${total.toFixed(2)}</span>
+            </div>
+            ${appliedDiscount > 0 ? `
+                <div style="display: flex; justify-content: space-between; padding: 8px 0; font-size: 12px; color: green;">
+                    <span>Sconto 10%:</span>
+                    <span>- € ${appliedDiscount.toFixed(2)}</span>
+                </div>
+            ` : ''}
+            <div style="display: flex; justify-content: space-between; padding: 12px 0; font-size: 14px; font-weight: bold; border-top: 2px solid #000; border-bottom: 2px solid #000;">
+                <span>TOTALE:</span>
+                <span>€ ${finalTotal.toFixed(2)}</span>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; font-size: 10px; color: #999; text-align: center; border-top: 1px solid #ddd; padding-top: 20px;">
+            <p>Grazie per il vostro ordine!</p>
+            <p>Conservate questo documento per i vostri archivi.</p>
+        </div>
+    </div>
+</body>
+</html>
+            `;
+
+            // Crea un blob e lo scarica
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ordine-${orderNumber}.html`;
+            
+            // Apri per la stampa
+            const printWindow = window.open(URL.createObjectURL(blob), '_blank');
+            
+            setTimeout(() => {
+                // Dopo apertura, pulisci
+                localStorage.removeItem('appliedDiscount');
+                localStorage.removeItem('discountPercentage');
+                
+                const askPersist = localStorage.getItem('askPersistence') === 'true';
+                if (askPersist) {
+                    const persist = confirm('Ordine completato! Vuoi mantenere il carrello per il prossimo accesso?');
+                    if (!persist) {
+                        shop.cart = [];
+                        shop.saveCart();
+                    }
+                    localStorage.setItem('askPersistence', 'false');
+                }
+
+                // Reindirizza al catalogo
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }, 500);
+        }
+
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const customerInfo = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                city: document.getElementById('city').value.trim()
+            };
+
+            if (!customerInfo.fullName || !customerInfo.email || !customerInfo.phone || !customerInfo.address || !customerInfo.city) {
+                alert('Compila tutti i campi');
+                return;
+            }
+
+            // Valida email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(customerInfo.email)) {
+                alert('Email non valida');
+                return;
+            }
+
+            // Disabilita bottone durante generazione
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'GENERAZIONE IN CORSO...';
+
+            setTimeout(() => {
+                generatePDF(customerInfo);
+            }, 500);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                renderCheckout();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

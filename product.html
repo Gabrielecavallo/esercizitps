@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettaglio Prodotto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header></header>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">CATALOGO</a>
+            <span>/</span>
+            <span id="breadcrumbProduct">Prodotto</span>
+        </div>
+
+        <div id="productContent">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function getProductIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        function renderProductDetail() {
+            const productId = getProductIdFromUrl();
+            if (!productId) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const product = shop.getProductById(productId);
+            if (!product) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('breadcrumbProduct').textContent = product.nomeProdotto.toUpperCase();
+
+            const content = document.getElementById('productContent');
+            content.innerHTML = `
+                <div class="product-detail">
+                    <div class="product-detail-image ${!product.immagine ? 'error' : ''}">
+                        ${product.immagine ? 
+                            `<img src="${product.immagine}" alt="${product.nomeProdotto}" onerror="this.parentElement.classList.add('error'); this.parentElement.textContent = 'Immagine non disponibile';">` 
+                            : 'Immagine non disponibile'
+                        }
+                    </div>
+                    <div class="product-detail-info">
+                        <div class="product-detail-brand">${product.brand}</div>
+                        <h1>${product.nomeProdotto}</h1>
+                        <div class="product-detail-price">${formatPrice(product.prezzo)}</div>
+                        <div class="product-detail-description">
+                            ${product.descrizione}
+                        </div>
+
+                        <div class="add-to-cart-section">
+                            <div class="quantity-input">
+                                <button class="quantity-btn" onclick="decreaseQuantity()">−</button>
+                                <input type="number" id="quantityInput" class="quantity-value" value="1" min="1" readonly>
+                                <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                            </div>
+                            <button class="btn" onclick="addToCartClick(${product.id})" style="flex-grow: 1;">
+                                AGGIUNGI AL CARRELLO
+                            </button>
+                        </div>
+
+                        <div id="successMessage" class="alert alert-success" style="display: none;">
+                            Prodotto aggiunto al carrello!
+                        </div>
+
+                        <div style="margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--color-border);">
+                            <h3 style="font-size: 0.95rem; margin-bottom: 16px;">DETTAGLI</h3>
+                            <p style="color: var(--color-text-secondary); font-size: 0.9rem; line-height: 1.8;">
+                                <strong>Brand:</strong> ${product.brand}<br>
+                                <strong>Prezzo:</strong> ${formatPrice(product.prezzo)}<br>
+                                <strong>Disponibilità:</strong> In stock<br>
+                            </p>
+                        </div>
+
+                        <a href="index.html" class="btn secondary" style="margin-top: 20px; width: 100%;">
+                            ← TORNA AL CATALOGO
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function increaseQuantity() {
+            const input = document.getElementById('quantityInput');
+            input.value = Math.max(1, parseInt(input.value) + 1);
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('quantityInput');
+            input.value = Math.max(1, parseInt(input.value) - 1);
+        }
+
+        function addToCartClick(productId) {
+            const quantity = parseInt(document.getElementById('quantityInput').value);
+            
+            shop.addToCart(productId, quantity);
+            
+            // Mostra messaggio di successo
+            const msg = document.getElementById('successMessage');
+            msg.style.display = 'block';
+            
+            // Reset quantità
+            document.getElementById('quantityInput').value = '1';
+
+            // Nascondi dopo 3 secondi
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                renderProductDetail();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

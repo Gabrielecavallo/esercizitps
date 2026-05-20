@@ -1,92 +1,106 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Esercizi di TPS</title>
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f0f4f8;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      color: #7db5f2;
-      margin-bottom: 30px;
-      text-align: center;
-      text-transform: uppercase;
-      font-weight: bold;
-      letter-spacing: 2px;
-    }
-
-    h3 {
-      font-size: 1.5em;
-      margin: 10px 0;
-      color: #fff;
-      text-align: center;
-      text-transform: uppercase;
-      font-weight: bold;
-      padding: 10px;
-      border-radius: 5px;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-
-    h3:hover {
-      background-color: #3498db;
-      transform: scale(1.1);
-    }
-
-    a {
-      text-decoration: none;
-      display: block;
-      width: 200px;
-      margin: 10px;
-      border-radius: 8px;
-      background-color: #2c3e50;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    a:hover {
-      background-color: #2980b9;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transform: translateY(-5px);
-    }
-
-    .container {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo - Calisthenics Shop</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header></header>
 
-  <div class="container">
-    <h1>Esercizi di TPS</h1>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/anagrafica/anagrafica1.1.html"><h3>Anagrafica 1.1</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/while.html"><h3>While</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/sabnetMask.html"><h3>SubnetMask</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/Host.html"><h3>Host e Suffix</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/Anagrafica2.0.html"><h3>Anagrafica2.0</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/calcolatrice.html"><h3>Calcolatrice</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/Anagrafica3.0.html"><h3>Anagrafica3.0</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/url.html"><h3>Url</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/anagrafica4.0.html"><h3>anagrafica4.0</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/anagrafica5.0.html"><h3>anagrafica5.0</h3></a>
-    <a href="https://Gabrielecavallo.github.io/esercizitps/anagrafica.csv.html"><h3>anagrafica.csv</h3></a>
-  </div>
+    <div class="container">
+        <div>
+            <h1 style="margin-bottom: 10px;">CATALOGO</h1>
+            <p style="color: #999999; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 30px;">Attrezzi professionali per calisthenics</p>
+        </div>
 
+        <div class="search-bar">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Cerca per brand o prodotto..."
+            >
+            <button onclick="performSearch()">CERCA</button>
+        </div>
+
+        <div id="productsGrid" class="grid-products"></div>
+
+        <div id="noResults" style="display: none; text-align: center; padding: 60px 20px;">
+            <h2 style="margin-bottom: 20px;">Nessun prodotto trovato</h2>
+            <button class="btn" onclick="clearSearch()">Torna al catalogo</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function renderProducts(productList = null) {
+            const grid = document.getElementById('productsGrid');
+            const noResults = document.getElementById('noResults');
+            const products = productList || shop.products;
+
+            if (products.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+
+            grid.innerHTML = products.map(product => `
+                <div class="product-card" onclick="goToProduct(${product.id})">
+                    <div class="product-image ${!product.immagine ? 'error' : ''}">
+                        ${product.immagine ? 
+                            `<img src="${product.immagine}" alt="${product.nomeProdotto}" onerror="this.parentElement.classList.add('error'); this.parentElement.innerHTML = 'Immagine non disponibile';">` 
+                            : 'Immagine non disponibile'
+                        }
+                    </div>
+                    <div class="product-info">
+                        <div class="product-brand">${product.brand}</div>
+                        <div class="product-name">${product.nomeProdotto}</div>
+                        <div class="product-description">${product.descrizione}</div>
+                        <div class="product-price" style="margin-top: auto;">${formatPrice(product.prezzo)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query === '') {
+                renderProducts();
+                return;
+            }
+
+            const results = shop.searchProducts(query);
+            renderProducts(results);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderProducts();
+        }
+
+        function goToProduct(id) {
+            window.location.href = `product.html?id=${id}`;
+        }
+
+        // Ricerca al digitare (debounce)
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch();
+            }, 300);
+        });
+
+        // Render iniziale
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                renderProducts();
+            }, 100);
+        });
+    </script>
 </body>
 </html>

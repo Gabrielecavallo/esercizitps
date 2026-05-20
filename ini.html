@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurazione Negozio Calisthenics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #1a1a1a;
+            border: 2px solid #333333;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #cccccc;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"],
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: #0a0a0a;
+            border: 1px solid #333333;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: #ffffff;
+            color: #0a0a0a;
+            border: none;
+            padding: 8px 16px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: #cccccc;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #ffffff;
+            background: #1a1a1a;
+        }
+
+        .file-info {
+            font-size: 0.85rem;
+            color: #666666;
+            margin-top: 6px;
+        }
+
+        .csv-structure {
+            background: #0a0a0a;
+            border-left: 3px solid #ffffff;
+            padding: 16px;
+            margin: 30px 0;
+            font-size: 0.85rem;
+            color: #999999;
+            font-family: 'Monaco', 'Courier New', monospace;
+            line-height: 1.8;
+        }
+
+        .csv-structure strong {
+            color: #ffffff;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: #ffffff;
+            color: #0a0a0a;
+            border: none;
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background: #cccccc;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #666666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            background: #2a0a0a;
+            border: 1px solid #aa3333;
+            color: #ff6666;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .success {
+            background: #0a2a0a;
+            border: 1px solid #33aa33;
+            color: #66ff66;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 40px 24px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .csv-structure {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SETUP</h1>
+        <p class="subtitle">Configurazione Negozio</p>
+
+        <form id="configForm">
+            <div class="error" id="errorMsg"></div>
+            <div class="success" id="successMsg"></div>
+
+            <div class="form-group">
+                <label for="shopName">Nome Negozio</label>
+                <input type="text" id="shopName" placeholder="es: CALISTHENICS PRO" required>
+                <div class="file-info">Apparirà nell'header di tutte le pagine</div>
+            </div>
+
+            <div class="csv-structure">
+                <strong>Formato CSV Richiesto:</strong><br>
+                brand,nomeProdotto,descrizione,immagine,prezzo<br><br>
+                <strong>Esempio:</strong><br>
+                Pullup Bar,Sbarra Professionale,Acciaio...,https://image.jpg,89.99
+            </div>
+
+            <div class="form-group">
+                <label for="csvFile">Carica File CSV</label>
+                <input type="file" id="csvFile" accept=".csv" required>
+                <div class="file-info">5 colonne: brand | nomeProdotto | descrizione | immagine | prezzo</div>
+            </div>
+
+            <button type="submit">INIZIALIZZA NEGOZIO</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const shopName = document.getElementById('shopName').value.trim();
+            const csvFile = document.getElementById('csvFile').files[0];
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            if (!shopName || !csvFile) {
+                errorMsg.textContent = 'Compila tutti i campi';
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csv = e.target.result;
+                    const lines = csv.split('\n').filter(line => line.trim());
+                    
+                    if (lines.length < 2) {
+                        throw new Error('CSV deve contenere almeno 1 prodotto');
+                    }
+
+                    // Valida prima riga (header) - deve avere esattamente 5 colonne
+                    const headers = lines[0].split(',').map(h => h.trim());
+                    if (headers.length !== 5) {
+                        throw new Error('CSV deve avere esattamente 5 colonne');
+                    }
+
+                    // Salva configurazione
+                    localStorage.setItem('shopName', shopName);
+                    localStorage.setItem('csvData', csv);
+                    localStorage.setItem('cartData', JSON.stringify([]));
+                    localStorage.setItem('askPersistence', 'true');
+
+                    successMsg.textContent = 'Configurazione salvata! Reindirizzamento...';
+                    successMsg.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+
+                } catch (err) {
+                    errorMsg.textContent = 'Errore: ' + err.message;
+                    errorMsg.style.display = 'block';
+                }
+            };
+
+            reader.readAsText(csvFile);
+        });
+    </script>
+</body>
+</html>
