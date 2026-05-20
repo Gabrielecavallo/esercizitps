@@ -86,7 +86,7 @@
             window.location.href = `product.html?id=${id}`;
         }
 
-        // Ricerca al digitare (debounce)
+        
         let searchTimeout;
         document.getElementById('searchInput').addEventListener('input', function() {
             clearTimeout(searchTimeout);
@@ -95,7 +95,7 @@
             }, 300);
         });
 
-        // Render iniziale
+        
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 renderProducts();
