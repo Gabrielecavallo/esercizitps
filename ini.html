@@ -251,13 +251,13 @@
                         throw new Error('CSV deve contenere almeno 1 prodotto');
                     }
 
-                    // Valida prima riga (header) - deve avere esattamente 5 colonne
+                    
                     const headers = lines[0].split(',').map(h => h.trim());
                     if (headers.length !== 5) {
                         throw new Error('CSV deve avere esattamente 5 colonne');
                     }
 
-                    // Salva configurazione
+                    
                     localStorage.setItem('shopName', shopName);
                     localStorage.setItem('csvData', csv);
                     localStorage.setItem('cartData', JSON.stringify([]));
