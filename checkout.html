@@ -13,7 +13,7 @@
         <h1 style="margin-bottom: 30px;">CHECKOUT</h1>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-            <!-- FORM DATI CLIENTE -->
+            
             <div>
                 <form id="checkoutForm">
                     <div class="checkout-section">
@@ -50,7 +50,7 @@
                 </form>
             </div>
 
-            <!-- RIEPILOGO VISIVO -->
+            
             <div>
                 <div class="checkout-section" style="position: sticky; top: 100px;">
                     <h2>TOTALE ORDINE</h2>
@@ -72,7 +72,7 @@
             const total = shop.getCartTotal();
             const finalTotal = total - appliedDiscount;
 
-            // Riepilogo nel form
+            
             const summaryHTML = `
                 <table class="cart-table" style="margin-bottom: 0;">
                     <tbody>
@@ -94,7 +94,7 @@
 
             document.getElementById('orderSummary').innerHTML = summaryHTML;
 
-            // Totale laterale
+        
             const finalSummaryHTML = `
                 <div class="summary-row">
                     <span>Subtotale:</span>
@@ -196,17 +196,17 @@
 </html>
             `;
 
-            // Crea un blob e lo scarica
+            
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = `ordine-${orderNumber}.html`;
             
-            // Apri per la stampa
+        
             const printWindow = window.open(URL.createObjectURL(blob), '_blank');
             
             setTimeout(() => {
-                // Dopo apertura, pulisci
+        
                 localStorage.removeItem('appliedDiscount');
                 localStorage.removeItem('discountPercentage');
                 
@@ -220,7 +220,7 @@
                     localStorage.setItem('askPersistence', 'false');
                 }
 
-                // Reindirizza al catalogo
+                
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 2000);
@@ -243,14 +243,14 @@
                 return;
             }
 
-            // Valida email
+            
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(customerInfo.email)) {
                 alert('Email non valida');
                 return;
             }
 
-            // Disabilita bottone durante generazione
+            
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
             btn.textContent = 'GENERAZIONE IN CORSO...';
