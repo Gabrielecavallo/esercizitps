@@ -1,0 +1,31 @@
+<!DOCTYPE html> <html lang="it"> <head> <meta charset="UTF-8"> <title>Dati COVID</title> </head> <body>
+<h2>Dati COVID-19 Italia</h2>
+<table id="tabella" border="1"> <thead id="intestazione"></thead> <tbody id="corpoTabella"></tbody> </table>
+<script>
+const richiesta = new XMLHttpRequest();
+richiesta.open("GET", "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-andamento-nazionale.json", true);
+richiesta.send();
+richiesta.onload = function() {
+const dati = JSON.parse(richiesta.responseText);
+const obj = dati[0];
+const numeroChiavi = Object.keys(obj).length;
+const keys = Object.keys(obj);
+const intestazione = document.getElementById("intestazione");
+const riga = document.createElement("tr");
+for (let i = 0; i < numeroChiavi; i++) {
+const cella = document.createElement("th");
+cella.textContent = keys[i];
+riga.appendChild(cella); }
+intestazione.appendChild(riga);
+const corpo = document.getElementById("corpoTabella");
+for (let i = 0; i < dati.length; i++) {
+const riga = document.createElement("tr");
+for (let j = 0; j < numeroChiavi; j++) {
+const cella = document.createElement("td");
+cella.textContent = dati[i][keys[j]];
+riga.appendChild(cella); }
+corpo.appendChild(riga); }
+};
+</script>
+</body> </html>
+
