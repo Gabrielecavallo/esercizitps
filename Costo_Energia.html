@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tabella PUN</title>
+</head>
+
+<body>
+
+    <h2>Andamento del costo dell'energia elettrica</h2>
+
+    <table id="tabella" border="1">
+        <thead id="intestazione"></thead>
+        <tbody id="corpoTabella"></tbody>
+    </table>
+
+    <script>
+
+        const xhttp = new XMLHttpRequest();
+
+        xhttp.open("GET", "dati.json", true);
+
+        xhttp.onload = function() {
+
+            const obj = JSON.parse(xhttp.responseText);
+
+            const dati = obj.andamento_mensile;
+
+            const intestazione = document.getElementById("intestazione");
+            const corpoTabella = document.getElementById("corpoTabella");
+
+            // Creo le intestazioni
+            const chiavi = Object.keys(dati[0]);
+
+            const rigaIntestazione = document.createElement("tr");
+
+            for (let i = 0; i < chiavi.length; i++) {
+
+                const th = document.createElement("th");
+
+                th.textContent = chiavi[i];
+
+                rigaIntestazione.appendChild(th);
+            }
+
+            intestazione.appendChild(rigaIntestazione);
+
+
+            // Creo le righe della tabella
+            for (let i = 0; i < dati.length; i++) {
+
+                const riga = document.createElement("tr");
+
+                for (let j = 0; j < chiavi.length; j++) {
+
+                    const cella = document.createElement("td");
+
+                    cella.textContent = dati[i][chiavi[j]];
+
+                    riga.appendChild(cella);
+                }
+
+                corpoTabella.appendChild(riga);
+            }
+
+        };
+
+        xhttp.send();
+
+    </script>
+
+</body>
+
+</html>
