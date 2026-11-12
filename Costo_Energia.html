@@ -30,7 +30,6 @@
             const intestazione = document.getElementById("intestazione");
             const corpoTabella = document.getElementById("corpoTabella");
 
-            // Creo le intestazioni
             const chiavi = Object.keys(dati[0]);
 
             const rigaIntestazione = document.createElement("tr");
@@ -47,7 +46,6 @@
             intestazione.appendChild(rigaIntestazione);
 
 
-            // Creo le righe della tabella
             for (let i = 0; i < dati.length; i++) {
 
                 const riga = document.createElement("tr");
