@@ -1,0 +1,125 @@
+{
+    "descrizione": "Andamento storico indicativo del costo dell'energia elettrica all'ingrosso (PUN - Prezzo Unico Nazionale) in Italia",
+    "unita_di_misura": "EUR/MWh",
+    "fonte_riferimento": "Elaborazione dati storici GME / ARERA",
+    "aggiornamento": "Ottobre 2026",
+    "andamento_mensile": [
+        {
+            "anno": 2024,
+            "mese": "Gennaio",
+            "valore_medio_pun": 99.1
+        },
+        {
+            "anno": 2024,
+            "mese": "Febbraio",
+            "valore_medio_pun": 87.6
+        },
+        {
+            "anno": 2024,
+            "mese": "Marzo",
+            "valore_medio_pun": 89.9
+        },
+        {
+            "anno": 2024,
+            "mese": "Aprile",
+            "valore_medio_pun": 86.8
+        },
+        {
+            "anno": 2024,
+            "mese": "Maggio",
+            "valore_medio_pun": 94.7
+        },
+        {
+            "anno": 2024,
+            "mese": "Giugno",
+            "valore_medio_pun": 103.2
+        },
+        {
+            "anno": 2024,
+            "mese": "Luglio",
+            "valore_medio_pun": 112.3
+        },
+        {
+            "anno": 2024,
+            "mese": "Agosto",
+            "valore_medio_pun": 128.4
+        },
+        {
+            "anno": 2024,
+            "mese": "Settembre",
+            "valore_medio_pun": 117.1
+        },
+        {
+            "anno": 2024,
+            "mese": "Ottobre",
+            "valore_medio_pun": 116.5
+        },
+        {
+            "anno": 2024,
+            "mese": "Novembre",
+            "valore_medio_pun": 121.3
+        },
+        {
+            "anno": 2024,
+            "mese": "Dicembre",
+            "valore_medio_pun": 115.4
+        },
+        {
+            "anno": 2025,
+            "mese": "Gennaio",
+            "valore_medio_pun": 143.0
+        },
+        {
+            "anno": 2025,
+            "mese": "Primo Trimestre (Media)",
+            "valore_medio_pun": 138.1
+        },
+        {
+            "anno": 2025,
+            "mese": "Media Annuale",
+            "valore_medio_pun": 116.0
+        },
+        {
+            "anno": 2026,
+            "mese": "Gennaio",
+            "valore_medio_pun": 131.0
+        },
+        {
+            "anno": 2026,
+            "mese": "Febbraio",
+            "valore_medio_pun": 114.41
+        },
+        {
+            "anno": 2026,
+            "mese": "Marzo",
+            "valore_medio_pun": 143.4
+        },
+        {
+            "anno": 2026,
+            "mese": "Aprile",
+            "valore_medio_pun": 119.47
+        },
+        {
+            "anno": 2026,
+            "mese": "Ottobre (Spot Corrente)",
+            "valore_medio_pun": 225.37
+        }
+    ],
+    "riferimento_gas_psv": {
+        "unita_di_misura": "EUR/Smc",
+        "dati_2026": [
+            {
+                "mese": "Aprile",
+                "valore_medio": 0.4923
+            },
+            {
+                "mese": "Maggio",
+                "valore_medio": 0.5017
+            },
+            {
+                "mese": "Giugno",
+                "valore_medio": 0.5048
+            }
+        ]
+    }
+}
