@@ -1,0 +1,47 @@
+<!DOCTYPE html> <html> <head> <title>Convertitore Valute</title> </head>
+<body>
+<h1>Convertitore di valute</h1>
+<label>
+Valuta:
+</label>
+<select id="divisa"> 
+<option value="">Seleziona una valuta</option> 
+</select>
+<label>
+Quantità:
+</label>
+<input type="number" id="quantita">
+<button onclick="converti()">Converti</button>
+<p id="risultato"></p>
+<script>
+var cambi = {};
+var xhttp = new XMLHttpRequest();
+xhttp.open("GET", "https://api.frankfurter.dev/v1/latest?base=EUR", true);
+xhttp.send();
+xhttp.onreadystatechange = function() {
+if (this.readyState == 4) {
+if (this.status == 200) {
+var dati = JSON.parse(this.responseText);
+cambi = dati.rates;
+var valute = dati.rates;
+var select = document.getElementById("divisa");
+for (var divisa in valute) {
+var option = document.createElement("option");
+option.value = divisa; 
+option.innerHTML = divisa;
+select.appendChild(option); }
+} else {
+document.getElementById("risultato").innerHTML = "Errore nel caricamento delle valute.";
+} } };
+function converti() {
+var divisaScelta = document.getElementById("divisa").value;
+var quantita = document.getElementById("quantita").value;
+if (divisaScelta == "" || quantita == "") {
+document.getElementById("risultato").innerHTML = "Seleziona una valuta e inserisci una quantità.";
+return; }
+var cambio = cambi[divisaScelta];
+var euro = quantita / cambio;
+document.getElementById("risultato").innerHTML = quantita + " " + divisaScelta + " = " + euro.toFixed(2) + " Euro";
+}
+</script>
+</body> </html>
